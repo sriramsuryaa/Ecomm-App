@@ -14,13 +14,11 @@ pipeline {
     stage('Set Variables') {
       steps {
         script {
-          
-          def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
+          def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
           env.IMAGE_TAG = branchName == 'main' ? 'latest' : 'latest'
           env.REPO = branchName == 'main' ? env.DOCKERHUB_PROD_REPO : env.DOCKERHUB_DEV_REPO
           env.HOST = branchName == 'main' ? env.PROD_SERVER : env.DEV_SERVER
-
 
           echo "Branch: ${branchName}"
           echo "Repo: ${env.REPO}"
@@ -40,7 +38,7 @@ pipeline {
       }      
     }
 
-    stage('Deploy to EC2') {
+    stage('Deploy') {
       steps {
         withCredentials([sshUserPrivateKey(credentialsId: 'ecomm-server', keyFileVariable: 'ECAPP_KEY', usernameVariable: 'ECAPP_USER')]) {
         sh '''ssh -o StrictHostKeyChecking=no -i $ECAPP_KEY $ECAPP_USER@$HOST "
