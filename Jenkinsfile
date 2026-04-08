@@ -21,6 +21,7 @@ pipeline {
           env.REPO = branchName == 'main' ? env.DOCKERHUB_PROD_REPO : env.DOCKERHUB_DEV_REPO
           env.HOST = branchName == 'main' ? env.PROD_SERVER : env.DEV_SERVER
 
+
           echo "Branch: ${branchName}"
           echo "Repo: ${env.REPO}"
           echo "Tag: ${env.IMAGE_TAG}"
@@ -44,7 +45,7 @@ pipeline {
       steps {
         withCredentials([sshUserPrivateKey(credentialsId: 'ecomm-app-prod', keyFileVariable: 'ECAPP_KEY', usernameVariable: 'ECAPP_USER')]) {
         sh """
-        ssh -i $ECAPP_KEY -o StrictHostKeyChecking=no $ECAPP_USER@$HOST '
+        ssh -i $ECAPP_KEY -o StrictHostKeyChecking=no $ECAPP_USER@${env.HOST} '
         cd deploy/
         sudo ./deploy.sh
         '
