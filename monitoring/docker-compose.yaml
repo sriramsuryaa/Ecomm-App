@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  blackbox:
+    image: quay.io/prometheus/blackbox-exporter:latest
+    container_name: blackbox
+    volumes:
+      - ./config:/config/
+    networks:
+      - monitoring
+    command: --config.file=/config/blackbox.yml
+    environment:
+      - EC_APP_DEV=${EC_APP_DEV}
+      - EC_APP_PROD=${EC_APP_PROD}
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+    environment:
+      - EC_APP_DEV=${EC_APP_DEV}
+      - EC_APP_PROD=${EC_APP_PROD}
+    depends_on:
+#     - trendstore-monitor
+      - blackbox
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
