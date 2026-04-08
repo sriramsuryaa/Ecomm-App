@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd ~/deploy/
+cd /home/ubuntu/deploy/
 
-sudo docker-compose up -d --pull always
+docker-compose pull
+docker-compose down
+docker-compose up -d
+docker-compose ps
