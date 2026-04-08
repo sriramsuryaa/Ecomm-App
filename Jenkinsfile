@@ -13,11 +13,13 @@ pipeline {
     stage('Set Variables') {
       steps {
         script {
+          echo "PROD : ${PROD_SERVER}"
+          echo "DEV  : ${DEV_SERVER}" 
           def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
           env.IMAGE_TAG = branchName == 'main' ? 'latest' : 'latest'
           env.REPO = branchName == 'main' ? env.DOCKERHUB_PROD_REPO : env.DOCKERHUB_DEV_REPO
-          env.HOST = branchName == 'main' ? 'PROD_SERVER' : 'DEV_SERVER'
+          env.HOST = branchName == 'main' ? env.PROD_SERVER : env.DEV_SERVER
 
           echo "Branch: ${branchName}"
           echo "Repo: ${env.REPO}"
