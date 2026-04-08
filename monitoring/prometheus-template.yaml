@@ -3,15 +3,10 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'nginx'
-    metrics_path: /metrics
-    static_configs:
-      - targets: ['trendstore-monitor:9113']  # exporter host:port
-
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
-      module: [http_2xx]  # Use the HTTP probe module
+      module: [http_2xx]  
     static_configs:
       - targets:
           - http://${EC_APP_DEV}
@@ -33,4 +28,4 @@ scrape_configs:
 
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']  # scrape Prometheus itself
+      - targets: ['localhost:9090']  
