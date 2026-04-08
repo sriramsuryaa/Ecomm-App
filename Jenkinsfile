@@ -44,7 +44,7 @@ pipeline {
     stage('Deploy to EC2') {
       steps {
         withCredentials([sshUserPrivateKey(credentialsId: 'ecomm-server', keyFileVariable: 'ECAPP_KEY', usernameVariable: 'ECAPP_USER')]) {
-        sh '''ssh -o StrictHostKeyChecking=no -i $ECAPP_KEY $ECAPP_USER@${env.HOST} "
+        sh '''ssh -o StrictHostKeyChecking=no -i $ECAPP_KEY $ECAPP_USER@$HOST "
         cd deploy/ && sudo ./deploy.sh
         "
         '''
