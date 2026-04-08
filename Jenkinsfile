@@ -34,7 +34,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DHUB_PASS', usernameVariable: 'DHUB_USER')]) {
         sh """ 
         # docker build -t ${env.REPO}:${env.IMAGE_TAG} .
-        # echo \$DHUB_PASS | docker login -u \$DHUB_USER --password-stdin
+        echo \$DHUB_PASS | docker login -u \$DHUB_USER --password-stdin
         # docker push ${env.REPO}:${env.IMAGE_TAG}
         chmod +x build.sh && ./build.sh
         """

@@ -6,5 +6,5 @@ set -euo pipefail
 # docker push ${env.REPO}:${env.IMAGE_TAG}
 
 docker build -t $REPO:$IMAGE_TAG .
-echo \$DHUB_PASS | docker login -u \$DHUB_USER --password-stdin
+docker tag $REPO:$IMAGE_TAG $REPO:$IMAGE_TAG
 docker push $REPO:$IMAGE_TAG
