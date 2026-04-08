@@ -1,9 +1,11 @@
 version: '3.8'
 
 services:
-  web:
+  app:
     image: sriramsuryaa/ecomm-app-${ENV}:latest
     ports:
       - "80:80"
     restart: unless-stopped
-    container_name: ecomm-app
+    container_name: ecomm-app-${ENV}
+    volumes:
+      - ""

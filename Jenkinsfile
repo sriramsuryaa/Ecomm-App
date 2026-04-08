@@ -6,6 +6,7 @@ pipeline {
     DOCKERHUB_PROD_REPO = "sriramsuryaa/ecomm-app-prod"
     PROD_SERVER = "${env.EC_APP_PROD}"
     DEV_SERVER  = "${env.EC_APP_DEV}"
+    DEPLOY_DIR  = "/home/ubuntu/deploy"
   }
 
   stages {
@@ -13,8 +14,7 @@ pipeline {
     stage('Set Variables') {
       steps {
         script {
-          echo "PROD : ${PROD_SERVER}"
-          echo "DEV  : ${DEV_SERVER}" 
+          
           def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
           env.IMAGE_TAG = branchName == 'main' ? 'latest' : 'latest'
@@ -33,9 +33,7 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DHUB_PASS', usernameVariable: 'DHUB_USER')]) {
         sh """ 
-        # docker build -t ${env.REPO}:${env.IMAGE_TAG} .
         echo \$DHUB_PASS | docker login -u \$DHUB_USER --password-stdin
-        # docker push ${env.REPO}:${env.IMAGE_TAG}
         chmod +x build.sh && ./build.sh
         """
       }
@@ -46,7 +44,7 @@ pipeline {
       steps {
         withCredentials([sshUserPrivateKey(credentialsId: 'ecomm-server', keyFileVariable: 'ECAPP_KEY', usernameVariable: 'ECAPP_USER')]) {
         sh '''ssh -o StrictHostKeyChecking=no -i $ECAPP_KEY $ECAPP_USER@$HOST "
-        cd deploy/ && sudo ./deploy.sh
+        cd $DEPLOY_DIR && sudo ./deploy.sh
         "
         '''
         }
