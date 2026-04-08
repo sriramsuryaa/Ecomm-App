@@ -4,8 +4,8 @@ pipeline {
   environment {
     DOCKERHUB_DEV_REPO = "sriramsuryaa/ecomm-app-dev"
     DOCKERHUB_PROD_REPO = "sriramsuryaa/ecomm-app-prod"
-  PROD_SERVER = "${env.EC_APP_PROD}"
-  DEV_SERVER  = "${env.EC_APP_DEV}"
+    PROD_SERVER = "${env.EC_APP_PROD}"
+    DEV_SERVER  = "${env.EC_APP_DEV}"
   }
 
   stages {
