@@ -7,5 +7,3 @@ services:
       - "80:80"
     restart: unless-stopped
     container_name: ecomm-app-${ENV}
-    volumes:
-      - ""
